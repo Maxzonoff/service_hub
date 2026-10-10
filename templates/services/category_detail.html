@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ category.name }} — {{ site_settings.site_name }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumbs">
+            <a href="{% url 'core:home' %}">Главная</a>
+            <span>/</span>
+            <a href="{% url 'services:list' %}">Услуги</a>
+            <span>/</span>
+            <strong>{{ category.name }}</strong>
+        </nav>
+        <h1><i class="bi {{ category.icon }}"></i> {{ category.name }}</h1>
+        <p>{{ category.description }}</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="service-card">
+                    <div class="service-body">
+                        <h3>{{ service.name }}</h3>
+                        <p>{{ service.short_description|truncatechars:100 }}</p>
+                        <div class="service-footer">
+                            <span class="price">от {{ service.price_from|floatformat:0 }} ₽</span>
+                            <a href="{{ service.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">В этой категории пока нет услуг.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

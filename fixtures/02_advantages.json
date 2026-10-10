@@ -1,0 +1,46 @@
+[
+  {
+    "model": "core.advantage",
+    "pk": 1,
+    "fields": {
+      "title": "Мастер за 30 минут",
+      "description": "Среднее время приезда специалиста по Москве — 30 минут",
+      "icon": "bi-clock-history",
+      "order": 1,
+      "is_active": true
+    }
+  },
+  {
+    "model": "core.advantage",
+    "pk": 2,
+    "fields": {
+      "title": "Гарантия 3 года",
+      "description": "Даём письменную гарантию на все виды работ",
+      "icon": "bi-shield-check",
+      "order": 2,
+      "is_active": true
+    }
+  },
+  {
+    "model": "core.advantage",
+    "pk": 3,
+    "fields": {
+      "title": "Фиксированная цена",
+      "description": "Стоимость известна заранее и не меняется в процессе",
+      "icon": "bi-tag-fill",
+      "order": 3,
+      "is_active": true
+    }
+  },
+  {
+    "model": "core.advantage",
+    "pk": 4,
+    "fields": {
+      "title": "Оплата после работы",
+      "description": "Платите только после приёмки результата",
+      "icon": "bi-cash-coin",
+      "order": 4,
+      "is_active": true
+    }
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "model": "services.category",
+    "pk": 1,
+    "fields": {
+      "name": "Сантехника",
+      "slug": "santehnika",
+      "icon": "bi-droplet-fill",
+      "description": "Устранение протечек, замена труб, установка сантехники",
+      "order": 1,
+      "is_active": true
+    }
+  },
+  {
+    "model": "services.category",
+    "pk": 2,
+    "fields": {
+      "name": "Электрика",
+      "slug": "elektrika",
+      "icon": "bi-lightning-charge-fill",
+      "description": "Проводка, розетки, выключатели, освещение, щитки",
+      "order": 2,
+      "is_active": true
+    }
+  },
+  {
+    "model": "services.category",
+    "pk": 3,
+    "fields": {
+      "name": "Натяжные потолки",
+      "slug": "potolki",
+      "icon": "bi-house-up-fill",
+      "description": "Установка натяжных потолков под ключ с гарантией",
+      "order": 3,
+      "is_active": true
+    }
+  },
+  {
+    "model": "services.category",
+    "pk": 4,
+    "fields": {
+      "name": "Грузчики",
+      "slug": "gruzchiki",
+      "icon": "bi-truck",
+      "description": "Квартирные, офисные и дачные переезды",
+      "order": 4,
+      "is_active": true
+    }
+  },
+  {
+    "model": "services.category",
+    "pk": 5,
+    "fields": {
+      "name": "Муж на час",
+      "slug": "muzh-na-chas",
+      "icon": "bi-person-workspace",
+      "description": "Мелкий бытовой ремонт: полки, карнизы, смесители",
+      "order": 5,
+      "is_active": true
+    }
+  },
+  {
+    "model": "services.category",
+    "pk": 6,
+    "fields": {
+      "name": "Такелажные работы",
+      "slug": "takelazh",
+      "icon": "bi-box-seam",
+      "description": "Перемещение пианино, сейфов, крупногабаритной техники",
+      "order": 6,
+      "is_active": true
+    }
+  }
+]

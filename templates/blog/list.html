@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Блог — {{ site_settings.site_name }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <h1>Полезные статьи</h1>
+        <p>Советы мастеров, лайфхаки и разбор типичных задач</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{{ post.get_absolute_url }}" class="post-card">
+                    {% if post.cover %}
+                    <img src="{{ post.cover.url }}" alt="{{ post.title }}">
+                    {% else %}
+                    <div class="post-cover-placeholder"><i class="bi bi-file-text"></i></div>
+                    {% endif %}
+                    <div class="post-body">
+                        <div class="post-meta">
+                            {{ post.published_at|date:"d.m.Y" }} · {{ post.views_count }} просмотров
+                        </div>
+                        <h3>{{ post.title }}</h3>
+                        <p>{{ post.excerpt|default:post.content|truncatechars:120 }}</p>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5"><p class="text-muted">Статьи появятся после заполнения админки.</p></div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="pagination-wrap mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">←</a></li>{% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">→</a></li>{% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

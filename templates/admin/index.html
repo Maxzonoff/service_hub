@@ -1,0 +1,158 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div id="content-main">
+
+<h1>Панель управления Service Hub</h1>
+
+<!-- Метрики -->
+<div class="dashboard-metrics">
+    <div class="metric-card metric-primary">
+        <i class="bi bi-clipboard-check"></i>
+        <div>
+            <span class="metric-value">{{ orders_this_month }}</span>
+            <span class="metric-label">Заказов за месяц</span>
+        </div>
+    </div>
+    <div class="metric-card metric-success">
+        <i class="bi bi-check-circle-fill"></i>
+        <div>
+            <span class="metric-value">{{ orders_done }}</span>
+            <span class="metric-label">Выполнено</span>
+        </div>
+    </div>
+    <div class="metric-card metric-warning">
+        <i class="bi bi-hourglass-split"></i>
+        <div>
+            <span class="metric-value">{{ orders_new }}</span>
+            <span class="metric-label">Новых заявок</span>
+        </div>
+    </div>
+    <div class="metric-card metric-danger">
+        <i class="bi bi-telephone-inbound"></i>
+        <div>
+            <span class="metric-value">{{ callbacks_pending }}</span>
+            <span class="metric-label">Ждут звонка</span>
+        </div>
+    </div>
+    <div class="metric-card metric-info">
+        <i class="bi bi-star-fill"></i>
+        <div>
+            <span class="metric-value">{{ reviews_pending }}</span>
+            <span class="metric-label">Отзывов на модерации</span>
+        </div>
+    </div>
+</div>
+
+<!-- Топ услуг + последние заявки -->
+<div class="dashboard-row">
+    <div class="dashboard-block">
+        <h2>🔥 Топ-5 услуг по заявкам</h2>
+        {% if top_services %}
+        <table class="dashboard-table">
+            <thead>
+                <tr><th>Услуга</th><th>Заявок</th></tr>
+            </thead>
+            <tbody>
+                {% for s in top_services %}
+                <tr>
+                    <td>{{ s.service__name|default:"—" }}</td>
+                    <td><strong>{{ s.count }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">Заявок пока нет</p>
+        {% endif %}
+    </div>
+
+    <div class="dashboard-block">
+        <h2>📋 Последние 5 заявок</h2>
+        {% if recent_orders %}
+        <table class="dashboard-table">
+            <thead>
+                <tr><th>№</th><th>Клиент</th><th>Статус</th></tr>
+            </thead>
+            <tbody>
+                {% for o in recent_orders %}
+                <tr>
+                    <td><a href="{% url 'admin:orders_order_change' o.pk %}">{{ o.number }}</a></td>
+                    <td>{{ o.name }}</td>
+                    <td><span class="status-badge status-{{ o.status }}">{{ o.get_status_display }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">Заявок пока нет</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Стандартные приложения Django -->
+{% if app_list %}
+<div class="dashboard-apps">
+    <h2>📚 Разделы</h2>
+    {% for app in app_list %}
+    <div class="app-section">
+        <h3>{{ app.name }}</h3>
+        <table>
+            {% for model in app.models %}
+            <tr>
+                {% if model.admin_url %}
+                    <th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
+                {% else %}
+                    <th scope="row">{{ model.name }}</th>
+                {% endif %}
+                {% if model.add_url %}
+                    <td><a href="{{ model.add_url }}" class="addlink">Добавить</a></td>
+                {% else %}<td></td>{% endif %}
+                {% if model.admin_url and model.view_only %}
+                    <td><a href="{{ model.admin_url }}" class="viewlink">Просмотр</a></td>
+                {% elif model.admin_url %}
+                    <td><a href="{{ model.admin_url }}" class="changelink">Изменить</a></td>
+                {% else %}<td></td>{% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+.dashboard-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 30px; }
+.metric-card { display: flex; align-items: center; gap: 16px; padding: 20px; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(11,60,93,.06); border-left: 5px solid #1E6BB8; }
+.metric-card i { font-size: 2.2rem; }
+.metric-card.metric-primary { border-left-color: #1E6BB8; } .metric-card.metric-primary i { color: #1E6BB8; }
+.metric-card.metric-success { border-left-color: #20BF6B; } .metric-card.metric-success i { color: #20BF6B; }
+.metric-card.metric-warning { border-left-color: #FFB800; } .metric-card.metric-warning i { color: #FFB800; }
+.metric-card.metric-danger  { border-left-color: #DC3545; } .metric-card.metric-danger i  { color: #DC3545; }
+.metric-card.metric-info    { border-left-color: #0B3C5D; } .metric-card.metric-info i    { color: #0B3C5D; }
+.metric-value { display: block; font-size: 2rem; font-weight: 800; color: #0B3C5D; line-height: 1; font-family: 'Manrope', sans-serif; }
+.metric-label { color: #566B7E; font-size: .9rem; margin-top: 4px; display: block; }
+.dashboard-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+.dashboard-block { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(11,60,93,.06); }
+.dashboard-block h2 { margin-top: 0; color: #0B3C5D; font-size: 1.15rem; }
+.dashboard-table { width: 100%; border-collapse: collapse; }
+.dashboard-table th, .dashboard-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #E8EFF6; font-size: .92rem; }
+.dashboard-table th { color: #566B7E; font-weight: 600; }
+.status-badge { padding: 3px 10px; border-radius: 12px; font-size: .8rem; font-weight: 600; }
+.status-new { background: #DBEAFE; color: #1E40AF; }
+.status-in_progress { background: #FEF3C7; color: #92400E; }
+.status-done { background: #D1FAE5; color: #065F46; }
+.status-canceled { background: #FEE2E2; color: #991B1B; }
+.dashboard-apps .app-section { margin-bottom: 20px; }
+.dashboard-apps h3 { background: #1E6BB8; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 1rem; }
+.dashboard-apps table { width: 100%; }
+.dashboard-apps th { text-align: left; padding: 8px; }
+.dashboard-apps td { padding: 8px; }
+@media (max-width: 768px) { .dashboard-row { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}

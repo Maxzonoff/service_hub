@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация — {{ site_settings.site_name }}{% endblock %}
+{% block content %}
+
+<section class="section auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1>Регистрация</h1>
+            <p class="text-muted">Создайте аккаунт, чтобы отслеживать заказы</p>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                    {{ field }}
+                    {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors.0 }}</div>{% endif %}
+                    {% if field.help_text %}<div class="form-help">{{ field.help_text|safe }}</div>{% endif %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary w-100 btn-lg">Зарегистрироваться</button>
+            </form>
+            <p class="auth-footer">
+                Уже есть аккаунт? <a href="{% url 'accounts:login' %}">Войти</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

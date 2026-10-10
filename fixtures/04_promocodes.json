@@ -1,0 +1,26 @@
+[
+  {
+    "model": "core.promocode",
+    "pk": 1,
+    "fields": {
+      "code": "WELCOME10",
+      "discount_percent": 10,
+      "valid_until": "2027-12-31",
+      "is_active": true,
+      "usage_limit": 0,
+      "used_count": 0
+    }
+  },
+  {
+    "model": "core.promocode",
+    "pk": 2,
+    "fields": {
+      "code": "FIRST15",
+      "discount_percent": 15,
+      "valid_until": "2027-06-30",
+      "is_active": true,
+      "usage_limit": 100,
+      "used_count": 0
+    }
+  }
+]

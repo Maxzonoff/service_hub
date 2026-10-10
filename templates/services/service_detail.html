@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}{{ service.name }} — {{ site_settings.site_name }}{% endblock %}
+{% block meta_description %}{{ service.short_description }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumbs">
+            <a href="{% url 'core:home' %}">Главная</a>
+            <span>/</span>
+            <a href="{% url 'services:list' %}">Услуги</a>
+            <span>/</span>
+            <a href="{{ service.category.get_absolute_url }}">{{ service.category.name }}</a>
+            <span>/</span>
+            <strong>{{ service.name }}</strong>
+        </nav>
+        <h1>{{ service.name }}</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                {% if service.image %}
+                <img src="{{ service.image.url }}" alt="{{ service.name }}" class="detail-image">
+                {% endif %}
+                <div class="detail-content">
+                    {{ service.description|safe|default:service.short_description }}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="sidebar-card sticky-sidebar">
+                    <div class="price-box">
+                        <span>Цена от</span>
+                        <strong>{{ service.price_from|floatformat:0 }} ₽</strong>
+                    </div>
+                    <a href="{% url 'orders:create' %}?service={{ service.slug }}" class="btn btn-primary w-100 mb-2">
+                        Заказать услугу
+                    </a>
+                    <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#callbackModal">
+                        Обратный звонок
+                    </button>
+                    <div class="sidebar-features">
+                        <div><i class="bi bi-check-circle-fill"></i> Фиксированная цена</div>
+                        <div><i class="bi bi-check-circle-fill"></i> Гарантия {{ site_settings.guarantee_years }} года</div>
+                        <div><i class="bi bi-check-circle-fill"></i> Оплата после работы</div>
+                        <div><i class="bi bi-check-circle-fill"></i> Мастер приедет за 30 мин</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if related %}
+<section class="section section-light">
+    <div class="container">
+        <h2 class="section-title">Похожие услуги</h2>
+        <div class="row g-4">
+            {% for s in related %}
+            <div class="col-md-6 col-lg-3">
+                <div class="service-card">
+                    <div class="service-body">
+                        <h3>{{ s.name }}</h3>
+                        <p>{{ s.short_description|truncatechars:80 }}</p>
+                        <div class="service-footer">
+                            <span class="price">от {{ s.price_from|floatformat:0 }} ₽</span>
+                            <a href="{{ s.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

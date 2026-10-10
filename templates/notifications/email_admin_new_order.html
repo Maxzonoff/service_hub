@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+body { font-family: Arial, sans-serif; background: #F4F8FB; padding: 20px; color: #1A2733; }
+.card { background: #fff; padding: 30px; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 8px 24px rgba(11,60,93,.10); }
+h1 { color: #0B3C5D; }
+.badge { background: #20BF6B; color: #fff; padding: 6px 14px; border-radius: 8px; display: inline-block; }
+table { width: 100%; margin: 20px 0; }
+td { padding: 8px 0; border-bottom: 1px solid #D8E3EC; }
+td:first-child { color: #566B7E; width: 40%; }
+.btn { background: #1E6BB8; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="card">
+    <span class="badge">Новая заявка</span>
+    <h1>Заявка №{{ order.number }}</h1>
+    <table>
+        <tr><td>Клиент</td><td><strong>{{ order.name }}</strong></td></tr>
+        <tr><td>Телефон</td><td><a href="tel:{{ order.phone }}">{{ order.phone }}</a></td></tr>
+        {% if order.email %}<tr><td>Email</td><td>{{ order.email }}</td></tr>{% endif %}
+        <tr><td>Услуга</td><td>{{ order.service|default:"—" }}</td></tr>
+        <tr><td>Адрес</td><td>{{ order.address }}</td></tr>
+        {% if order.preferred_date %}<tr><td>Желаемая дата</td><td>{{ order.preferred_date|date:"d.m.Y" }}</td></tr>{% endif %}
+        {% if order.comment %}<tr><td>Комментарий</td><td>{{ order.comment }}</td></tr>{% endif %}
+        {% if order.promo_code %}<tr><td>Промокод</td><td>{{ order.promo_code.code }} ({{ order.promo_code.discount_percent }}%)</td></tr>{% endif %}
+    </table>
+    <a href="http://127.0.0.1:8000/admin/orders/order/{{ order.pk }}/change/" class="btn">Открыть в админке</a>
+</div>
+</body>
+</html>
