@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Заказ №{{ order.number }}{% endblock %}
+{% block content %}
+
+<section class="section">
+    <div class="container">
+        <h1>Заказ №{{ order.number }}</h1>
+        <div class="info-block">
+            <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+            <p><strong>Имя:</strong> {{ order.name }}</p>
+            <p><strong>Телефон:</strong> {{ order.phone }}</p>
+            <p><strong>Адрес:</strong> {{ order.address }}</p>
+            <p><strong>Услуга:</strong> {{ order.service|default:"—" }}</p>
+            <p><strong>Создан:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

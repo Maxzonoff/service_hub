@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Отзывы — {{ site_settings.site_name }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <h1>Отзывы клиентов</h1>
+        <p>Что говорят о нас наши клиенты</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="text-end mb-4">
+            <a href="{% url 'reviews:add' %}" class="btn btn-primary">Оставить отзыв</a>
+        </div>
+        <div class="row g-4">
+            {% for review in reviews %}
+            <div class="col-md-6">
+                <div class="review-card">
+                    <div class="review-stars">
+                        {% for i in "12345"|make_list %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}
+                    </div>
+                    <p>{{ review.text }}</p>
+                    <footer>
+                        <strong>{{ review.name }}</strong>
+                        <span class="text-muted">— {{ review.created_at|date:"d.m.Y" }}</span>
+                    </footer>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Пока нет отзывов. Будьте первым!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

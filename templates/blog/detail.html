@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.meta_title|default:post.title }}{% endblock %}
+{% block meta_description %}{{ post.meta_description|default:post.excerpt }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumbs">
+            <a href="{% url 'core:home' %}">Главная</a>
+            <span>/</span>
+            <a href="{% url 'blog:list' %}">Блог</a>
+            <span>/</span>
+            <strong>{{ post.title }}</strong>
+        </nav>
+        <h1>{{ post.title }}</h1>
+        <div class="post-meta mt-2">
+            {{ post.published_at|date:"d.m.Y" }} · {{ post.views_count }} просмотров
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                {% if post.cover %}
+                <img src="{{ post.cover.url }}" alt="{{ post.title }}" class="detail-image">
+                {% endif %}
+                <div class="detail-content">
+                    {{ post.content|safe }}
+                </div>
+                {% if post.tags.all %}
+                <div class="post-tags mt-4">
+                    {% for tag in post.tags.all %}
+                    <span class="tag">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if related %}
+<section class="section section-light">
+    <div class="container">
+        <h2 class="section-title">Похожие статьи</h2>
+        <div class="row g-4">
+            {% for p in related %}
+            <div class="col-md-4">
+                <a href="{{ p.get_absolute_url }}" class="post-card">
+                    <div class="post-body">
+                        <h3>{{ p.title }}</h3>
+                        <p>{{ p.excerpt|default:p.content|truncatechars:100 }}</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

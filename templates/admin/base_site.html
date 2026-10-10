@@ -1,0 +1,64 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | Service Hub{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <i class="bi bi-tools"></i> <strong>Service Hub</strong> — администрирование
+    </a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --primary: #1E6BB8;
+        --secondary: #0B3C5D;
+        --accent: #20BF6B;
+        --link-fg: #1E6BB8;
+        --link-hover-color: #0B3C5D;
+        --link-selected-fg: #0B3C5D;
+        --header-bg: #0B3C5D;
+        --header-color: #fff;
+        --breadcrumbs-bg: #1E6BB8;
+        --breadcrumbs-fg: #fff;
+        --button-bg: #1E6BB8;
+        --button-hover-bg: #0B3C5D;
+        --default-button-bg: #20BF6B;
+        --default-button-hover-bg: #159C54;
+    }
+    #header {
+        background: linear-gradient(135deg, #0B3C5D 0%, #1E6BB8 100%);
+        color: #fff;
+    }
+    #branding h1, #branding h1 a:link, #branding h1 a:visited {
+        color: #fff;
+    }
+    #branding i { color: #20BF6B; }
+    .module h2, .module caption {
+        background: #1E6BB8;
+        color: #fff;
+    }
+    div.breadcrumbs {
+        background: #1E6BB8;
+    }
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: #1E6BB8;
+    }
+    .button:hover, input[type=submit]:hover, input[type=button]:hover {
+        background: #0B3C5D;
+    }
+    .button.default, input[type=submit].default, .submit-row input.default {
+        background: #20BF6B;
+    }
+    .button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+        background: #159C54;
+    }
+    #nav-sidebar .current-app .section:link, #nav-sidebar .current-app .section:visited {
+        color: #20BF6B;
+    }
+</style>
+{% endblock %}

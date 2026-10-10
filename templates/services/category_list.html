@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Категории услуг — {{ site_settings.site_name }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <h1>Категории услуг</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{{ category.get_absolute_url }}" class="category-card">
+                    <i class="bi {{ category.icon }}"></i>
+                    <h3>{{ category.name }}</h3>
+                    <p>{{ category.services.count }} услуг</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

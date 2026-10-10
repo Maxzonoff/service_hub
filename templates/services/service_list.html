@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Услуги — {{ site_settings.site_name }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <h1>Наши услуги</h1>
+        <p>Более 100 видов работ: от замены крана до переезда под ключ</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="service-card">
+                    {% if service.image %}
+                    <img src="{{ service.image.url }}" alt="{{ service.name }}" class="service-image">
+                    {% else %}
+                    <div class="service-image-placeholder"><i class="bi bi-tools"></i></div>
+                    {% endif %}
+                    <div class="service-body">
+                        <span class="service-category">{{ service.category.name }}</span>
+                        <h3>{{ service.name }}</h3>
+                        <p>{{ service.short_description|default:service.description|truncatechars:100 }}</p>
+                        <div class="service-footer">
+                            <span class="price">от {{ service.price_from|floatformat:0 }} ₽</span>
+                            <a href="{{ service.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Услуги появятся после заполнения админки.</p>
+                <a href="{% url 'orders:create' %}" class="btn btn-primary">Оставить заявку</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="pagination-wrap">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">←</a></li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">→</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

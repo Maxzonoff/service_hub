@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Личный кабинет — {{ site_settings.site_name }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <h1>Личный кабинет</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-4">
+                <div class="profile-card">
+                    {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="{{ user.get_full_name }}" class="profile-avatar">
+                    {% else %}
+                    <div class="profile-avatar-placeholder"><i class="bi bi-person-fill"></i></div>
+                    {% endif %}
+                    <h2>{{ user.get_full_name }}</h2>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <p><i class="bi bi-telephone"></i> {{ user.phone }}</p>
+                    {% if user.address %}<p><i class="bi bi-geo-alt"></i> {{ user.address }}</p>{% endif %}
+                    <a href="{% url 'accounts:profile_edit' %}" class="btn btn-outline-primary w-100 mt-3">
+                        <i class="bi bi-pencil"></i> Редактировать профиль
+                    </a>
+                    <form method="post" action="{% url 'accounts:logout' %}" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-box-arrow-right"></i> Выйти
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="orders-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Мои заказы</h2>
+                        <a href="{% url 'orders:create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus"></i> Новая заявка
+                        </a>
+                    </div>
+                    {% if orders %}
+                    <div class="orders-list">
+                        {% for order in orders %}
+                        <a href="{% url 'orders:detail' number=order.number %}" class="order-item">
+                            <div>
+                                <strong>№{{ order.number }}</strong>
+                                <span>{{ order.service|default:"Услуга" }}</span>
+                            </div>
+                            <div class="text-end">
+                                <span class="order-status status-{{ order.status }}">{{ order.get_status_display }}</span>
+                                <small>{{ order.created_at|date:"d.m.Y" }}</small>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-clipboard"></i>
+                        <p>У вас пока нет заказов</p>
+                        <a href="{% url 'orders:create' %}" class="btn btn-primary">Оформить первый заказ</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

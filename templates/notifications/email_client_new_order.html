@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+body { font-family: Arial, sans-serif; background: #F4F8FB; padding: 20px; color: #1A2733; }
+.card { background: #fff; padding: 30px; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 8px 24px rgba(11,60,93,.10); }
+h1 { color: #0B3C5D; }
+.badge { background: #20BF6B; color: #fff; padding: 6px 14px; border-radius: 8px; display: inline-block; }
+.info { background: #EBF3FA; padding: 16px; border-radius: 8px; margin: 16px 0; }
+</style>
+</head>
+<body>
+<div class="card">
+    <span class="badge">Заявка принята</span>
+    <h1>Спасибо, {{ order.name }}!</h1>
+    <p>Ваша заявка <strong>№{{ order.number }}</strong> принята.</p>
+    <div class="info">
+        <p><strong>Мастер свяжется с вами в течение 15 минут</strong> по номеру {{ order.phone }}.</p>
+    </div>
+    <p>Что дальше:</p>
+    <ol>
+        <li>Перезвоним и уточним детали</li>
+        <li>Согласуем удобное время</li>
+        <li>Мастер приедет и выполнит работу</li>
+        <li>Оплатите после приёмки работ</li>
+    </ol>
+    <p>С уважением,<br>команда Service Hub</p>
+</div>
+</body>
+</html>
