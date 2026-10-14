@@ -1,0 +1,20 @@
+# ─────────────────────────────────────────────
+# systemd-юнит для Celery worker
+# Активация: sudo systemctl enable --now servicehub-celery
+# ─────────────────────────────────────────────
+[Unit]
+Description=Service Hub — Celery Worker
+After=network.target redis-server.service
+
+[Service]
+User=deploy
+Group=www-data
+WorkingDirectory=/home/deploy/service_hub
+Environment="PATH=/home/deploy/service_hub/.venv/bin"
+EnvironmentFile=/home/deploy/service_hub/.env.prod
+ExecStart=/home/deploy/service_hub/.venv/bin/celery -A config worker -l info
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

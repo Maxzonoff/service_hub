@@ -1,0 +1,27 @@
+# ─────────────────────────────────────────────
+# systemd-юнит для Gunicorn (Service Hub)
+# Файл размещается на VPS в /etc/systemd/system/
+# Активация: sudo systemctl enable --now servicehub-web
+# ─────────────────────────────────────────────
+[Unit]
+Description=Service Hub — Gunicorn (Django)
+After=network.target
+
+[Service]
+User=deploy
+Group=www-data
+WorkingDirectory=/home/deploy/service_hub
+Environment="PATH=/home/deploy/service_hub/.venv/bin"
+EnvironmentFile=/home/deploy/service_hub/.env.prod
+ExecStart=/home/deploy/service_hub/.venv/bin/gunicorn \
+    --access-logfile - \
+    --error-logfile - \
+    --workers 3 \
+    --timeout 120 \
+    --bind unix:/home/deploy/service_hub/gunicorn.sock \
+    config.wsgi:application
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

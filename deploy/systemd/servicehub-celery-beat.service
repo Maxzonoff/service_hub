@@ -1,0 +1,20 @@
+# ─────────────────────────────────────────────
+# systemd-юнит для Celery beat (планировщик периодических задач)
+# Активация: sudo systemctl enable --now servicehub-celery-beat
+# ─────────────────────────────────────────────
+[Unit]
+Description=Service Hub — Celery Beat
+After=network.target redis-server.service
+
+[Service]
+User=deploy
+Group=www-data
+WorkingDirectory=/home/deploy/service_hub
+Environment="PATH=/home/deploy/service_hub/.venv/bin"
+EnvironmentFile=/home/deploy/service_hub/.env.prod
+ExecStart=/home/deploy/service_hub/.venv/bin/celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

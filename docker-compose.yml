@@ -1,0 +1,39 @@
+# ─────────────────────────────────────────────
+# docker-compose для локальной разработки
+# Используйте для запуска БД и Redis, если не хотите
+# ставить их локально через Homebrew.
+#
+# ВАЖНО: если PostgreSQL уже работает на порту 5432,
+# НЕ запускайте сервис `db` — будет конфликт портов.
+# В этом случае запускайте только Redis:
+#   docker compose up -d redis
+# ─────────────────────────────────────────────
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"   # 5433 снаружи, чтобы не конфликтовать с локальным Postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
