@@ -48,7 +48,6 @@ LOCAL_APPS = [
     'apps.accounts',
     'apps.services',
     'apps.orders',
-    'apps.masters',
     'apps.reviews',
     'apps.blog',
     'apps.notifications',

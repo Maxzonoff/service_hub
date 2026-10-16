@@ -62,7 +62,6 @@ urlpatterns = [
     path('services/', include('apps.services.urls', namespace='services')),
     path('orders/', include('apps.orders.urls', namespace='orders')),
     path('accounts/', include('apps.accounts.urls', namespace='accounts')),
-    path('masters/', include('apps.masters.urls', namespace='masters')),
     path('reviews/', include('apps.reviews.urls', namespace='reviews')),
     path('blog/', include('apps.blog.urls', namespace='blog')),
 ]

@@ -6,7 +6,6 @@ from django.views.generic import TemplateView, View
 
 from apps.services.models import Category, Service
 from apps.reviews.models import Review
-from apps.masters.models import Master
 
 from .forms import CallbackForm
 from .models import Advantage, FAQ, SiteSettings
@@ -22,7 +21,6 @@ class HomeView(View):
             'popular_services': Service.objects.filter(is_active=True)[:6],
             'advantages': Advantage.objects.filter(is_active=True),
             'reviews': Review.objects.filter(is_published=True)[:6],
-            'masters': Master.objects.filter(is_active=True)[:4],
             'faqs': FAQ.objects.filter(is_active=True),
             'callback_form': CallbackForm(),
         }
@@ -35,10 +33,9 @@ class AboutView(TemplateView):
     template_name = 'core/about.html'
 
     def get_context_data(self, **kwargs):
-        """Добавляет преимущества и мастеров."""
+        """Добавляет преимущества."""
         ctx = super().get_context_data(**kwargs)
         ctx['advantages'] = Advantage.objects.filter(is_active=True)
-        ctx['masters'] = Master.objects.filter(is_active=True)
         return ctx
 
 
