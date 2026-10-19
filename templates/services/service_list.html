@@ -4,13 +4,33 @@
 
 <section class="page-hero">
     <div class="container">
-        <h1>Наши услуги</h1>
-        <p>Более 100 видов работ: от замены крана до переезда под ключ</p>
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <h1>Наши услуги</h1>
+                <p>Более 100 видов работ: от замены крана до переезда под ключ</p>
+            </div>
+            {% if user.is_authenticated and user.is_staff %}
+            <a href="{% url 'services:add' %}" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-lg"></i> Добавить услугу
+            </a>
+            {% endif %}
+        </div>
     </div>
 </section>
 
 <section class="section">
     <div class="container">
+
+        {% if categories %}
+        <div class="category-tabs mb-4">
+            {% for cat in categories %}
+            <a href="{{ cat.get_absolute_url }}" class="category-tab">
+                <i class="bi {{ cat.icon }}"></i> {{ cat.name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="row g-4">
             {% for service in services %}
             <div class="col-md-6 col-lg-4">
@@ -23,7 +43,7 @@
                     <div class="service-body">
                         <span class="service-category">{{ service.category.name }}</span>
                         <h3>{{ service.name }}</h3>
-                        <p>{{ service.short_description|default:service.description|truncatechars:100 }}</p>
+                        <p>{{ service.short_description|default:service.description|striptags|truncatechars:100 }}</p>
                         <div class="service-footer">
                             <span class="price">от {{ service.price_from|floatformat:0 }} ₽</span>
                             <a href="{{ service.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Подробнее</a>
@@ -33,8 +53,12 @@
             </div>
             {% empty %}
             <div class="col-12 text-center py-5">
-                <p class="text-muted">Услуги появятся после заполнения админки.</p>
+                <p class="text-muted">Услуги появятся после заполнения.</p>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'services:add' %}" class="btn btn-primary">Добавить первую услугу</a>
+                {% else %}
                 <a href="{% url 'orders:create' %}" class="btn btn-primary">Оставить заявку</a>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

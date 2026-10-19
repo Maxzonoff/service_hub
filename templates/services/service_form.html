@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ form_title }} — {{ site_settings.site_name }}{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumbs">
+            <a href="{% url 'core:home' %}">Главная</a>
+            <span>/</span>
+            <a href="{% url 'services:list' %}">Услуги</a>
+            <span>/</span>
+            <strong>{{ form_title }}</strong>
+        </nav>
+        <h1>{{ form_title }}</h1>
+        <p>Заполните форму. Поля со звёздочкой обязательны.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="form-card form-card-lg">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">{{ form.non_field_errors.0 }}</div>
+                        {% endif %}
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label class="form-label">{{ form.name.label }} *</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}<div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">{{ form.price_from.label }} *</label>
+                                {{ form.price_from }}
+                                {% if form.price_from.errors %}<div class="text-danger small mt-1">{{ form.price_from.errors.0 }}</div>{% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">{{ form.category.label }} *</label>
+                                {{ form.category }}
+                                {% if form.category.errors %}<div class="text-danger small mt-1">{{ form.category.errors.0 }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">{{ form.slug.label }}</label>
+                                {{ form.slug }}
+                                <div class="form-help">Только латиница, цифры, дефис. Оставьте пустым — сгенерируется автоматически.</div>
+                                {% if form.slug.errors %}<div class="text-danger small mt-1">{{ form.slug.errors.0 }}</div>{% endif %}
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">{{ form.short_description.label }}</label>
+                                {{ form.short_description }}
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">{{ form.description.label }}</label>
+                                {{ form.description }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">{{ form.image.label }}</label>
+                                {{ form.image }}
+                                <div class="form-help">Одно главное изображение. Автоматически уменьшается до 800×800.</div>
+                                {% if form.instance.image %}
+                                <div class="form-help">
+                                    Текущее: <a href="{{ form.instance.image.url }}" target="_blank">открыть</a>
+                                    <br>
+                                    <img src="{{ form.instance.image.url }}" alt="Текущее" class="mt-2" style="max-height:120px;border-radius:8px;">
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">{{ form.gallery_images.label }}</label>
+                                {{ form.gallery_images }}
+                                <div class="form-help">{{ form.gallery_images.help_text }}</div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-check">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label ms-2" for="{{ form.is_active.id_for_label }}">
+                                        {{ form.is_active.label }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            {# Существующая галерея (при редактировании) #}
+                            {% if gallery %}
+                            <div class="col-12">
+                                <label class="form-label mt-3">Текущая галерея ({{ gallery.count }} фото)</label>
+                                <div class="admin-gallery">
+                                    {% for img in gallery %}
+                                    <div class="admin-gallery-item">
+                                        <img src="{{ img.get_thumb_url }}" alt="{{ img.alt_text }}">
+                                        <a href="{% url 'admin:services_serviceimage_delete' img.pk %}"
+                                           class="admin-gallery-remove"
+                                           onclick="return confirm('Удалить это фото?');">
+                                            <i class="bi bi-x"></i>
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="col-12 mt-4 d-flex gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-check-lg"></i> {{ submit_label }}
+                                </button>
+                                <a href="{% url 'services:list' %}" class="btn btn-outline-secondary btn-lg">Отмена</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
