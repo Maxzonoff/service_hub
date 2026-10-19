@@ -1,5 +1,4 @@
-"""Админка orders."""
-
+"""Админка orders с SMS при смене статуса."""
 from django.contrib import admin
 
 from .models import Order, OrderMessage
@@ -26,20 +25,63 @@ class OrderAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     actions = ('mark_in_progress', 'mark_done', 'mark_canceled')
 
+    def save_model(self, request, obj, form, change):
+        """Отправляет SMS при смене статуса через админку."""
+        old_status = None
+        if change and 'status' in form.changed_data:
+            old_status = Order.objects.get(pk=obj.pk).status
+
+        super().save_model(request, obj, form, change)
+
+        if old_status and old_status != obj.status:
+            try:
+                from apps.notifications.tasks import send_sms_order_status_changed
+                send_sms_order_status_changed.delay(obj.pk, obj.status)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).warning(f'SMS Celery недоступен: {e}')
+
     @admin.action(description='В работу')
     def mark_in_progress(self, request, queryset):
-        """Массово переводит в работу."""
-        queryset.update(status=Order.Status.IN_PROGRESS)
+        """Массово переводит в работу + SMS."""
+        for order in queryset:
+            old_status = order.status
+            order.status = Order.Status.IN_PROGRESS
+            order.save()
+            if old_status != Order.Status.IN_PROGRESS:
+                try:
+                    from apps.notifications.tasks import send_sms_order_status_changed
+                    send_sms_order_status_changed.delay(order.pk, order.status)
+                except Exception:
+                    pass
 
     @admin.action(description='Выполнено')
     def mark_done(self, request, queryset):
-        """Массово помечает выполненными."""
-        queryset.update(status=Order.Status.DONE)
+        """Массово помечает выполненными + SMS."""
+        for order in queryset:
+            old_status = order.status
+            order.status = Order.Status.DONE
+            order.save()
+            if old_status != Order.Status.DONE:
+                try:
+                    from apps.notifications.tasks import send_sms_order_status_changed
+                    send_sms_order_status_changed.delay(order.pk, order.status)
+                except Exception:
+                    pass
 
     @admin.action(description='Отменено')
     def mark_canceled(self, request, queryset):
-        """Массово отменяет."""
-        queryset.update(status=Order.Status.CANCELED)
+        """Массово отменяет + SMS."""
+        for order in queryset:
+            old_status = order.status
+            order.status = Order.Status.CANCELED
+            order.save()
+            if old_status != Order.Status.CANCELED:
+                try:
+                    from apps.notifications.tasks import send_sms_order_status_changed
+                    send_sms_order_status_changed.delay(order.pk, order.status)
+                except Exception:
+                    pass
 
 
 @admin.register(OrderMessage)

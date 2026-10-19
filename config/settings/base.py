@@ -198,9 +198,20 @@ ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@example.com')
 # ─────────────────────────────────────────────
 # SMS
 # ─────────────────────────────────────────────
+SMS_PROVIDER = config('SMS_PROVIDER', default='stub')  # stub | smsru | twilio
 SMS_API_KEY = config('SMS_API_KEY', default='')
 SMS_SENDER = config('SMS_SENDER', default='ServiceHub')
 
+# SMS.ru
+SMSRU_API_ID = config('SMSRU_API_ID', default='')
+
+# Twilio
+TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID', default='')
+TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN', default='')
+TWILIO_FROM_NUMBER = config('TWILIO_FROM_NUMBER', default='')
+
+# Телефон админа для SMS-уведомлений
+ADMIN_PHONE = config('ADMIN_PHONE', default='')
 # ─────────────────────────────────────────────
 # Celery
 # ─────────────────────────────────────────────
