@@ -4,8 +4,17 @@
 
 <section class="page-hero">
     <div class="container">
-        <h1>Полезные статьи</h1>
-        <p>Советы мастеров, лайфхаки и разбор типичных задач</p>
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <h1>Полезные статьи</h1>
+                <p>Советы мастеров, лайфхаки и разбор типичных задач</p>
+            </div>
+            {% if user.is_authenticated and user.is_staff %}
+            <a href="{% url 'blog:add' %}" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-lg"></i> Новая статья
+            </a>
+            {% endif %}
+        </div>
     </div>
 </section>
 
@@ -25,25 +34,34 @@
                             {{ post.published_at|date:"d.m.Y" }} · {{ post.views_count }} просмотров
                         </div>
                         <h3>{{ post.title }}</h3>
-                        <p>{{ post.excerpt|default:post.content|truncatechars:120 }}</p>
+                        <p>{{ post.excerpt|default:post.content|striptags|truncatechars:120 }}</p>
                     </div>
                 </a>
             </div>
             {% empty %}
-            <div class="col-12 text-center py-5"><p class="text-muted">Статьи появятся после заполнения админки.</p></div>
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Статьи появятся после заполнения.</p>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'blog:add' %}" class="btn btn-primary">Создать первую статью</a>
+                {% endif %}
+            </div>
             {% endfor %}
         </div>
 
         {% if is_paginated %}
         <nav class="pagination-wrap mt-5">
             <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">←</a></li>{% endif %}
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">←</a></li>
+                {% endif %}
                 {% for num in page_obj.paginator.page_range %}
                 <li class="page-item {% if page_obj.number == num %}active{% endif %}">
                     <a class="page-link" href="?page={{ num }}">{{ num }}</a>
                 </li>
                 {% endfor %}
-                {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">→</a></li>{% endif %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">→</a></li>
+                {% endif %}
             </ul>
         </nav>
         {% endif %}
