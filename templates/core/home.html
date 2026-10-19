@@ -49,6 +49,33 @@
     </div>
 </section>
 
+
+{# Блок "Наши работы" #}
+{% if portfolio_works %}
+<section class="section section-light">
+    <div class="container">
+        <h2 class="section-title">Наши работы</h2>
+        <div class="row g-4">
+            {% for work in portfolio_works %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{{ work.get_absolute_url }}" class="portfolio-card">
+                    <div class="portfolio-image-wrap">
+                        <img src="{{ work.main_image.url }}" alt="{{ work.title }}" loading="lazy">
+                    </div>
+                    <div class="portfolio-body">
+                        <h3>{{ work.title }}</h3>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:list' %}" class="btn btn-primary btn-lg">Смотреть все работы</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <section class="advantages section section-light">
     <div class="container">
         <h2 class="section-title">Почему выбирают нас</h2>

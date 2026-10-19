@@ -64,6 +64,7 @@ urlpatterns = [
     path('accounts/', include('apps.accounts.urls', namespace='accounts')),
     path('reviews/', include('apps.reviews.urls', namespace='reviews')),
     path('blog/', include('apps.blog.urls', namespace='blog')),
+    path('portfolio/', include('apps.portfolio.urls', namespace='portfolio')),
 ]
 
 if settings.DEBUG:

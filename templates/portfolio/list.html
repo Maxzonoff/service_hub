@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Портфолио — {{ site_settings.site_name }}{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <h1>Наши работы</h1>
+                <p>Реальные проекты: от замены крана до переезда под ключ</p>
+            </div>
+            {% if user.is_authenticated and user.is_staff %}
+            <a href="{% url 'portfolio:add' %}" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-lg"></i> Добавить работу
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+
+        {# Фильтр по категориям #}
+        {% if categories %}
+        <div class="category-tabs mb-4">
+            <a href="{% url 'portfolio:list' %}" class="category-tab {% if not current_category %}active{% endif %}">
+                <i class="bi bi-grid"></i> Все
+            </a>
+            {% for cat in categories %}
+            <a href="?category={{ cat.slug }}"
+               class="category-tab {% if current_category == cat.slug %}active{% endif %}">
+                <i class="bi {{ cat.icon }}"></i> {{ cat.name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {# Сетка работ #}
+        <div class="row g-4">
+            {% for work in works %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{{ work.get_absolute_url }}" class="portfolio-card">
+                    <div class="portfolio-image-wrap">
+                        <img src="{{ work.main_image.url }}" alt="{{ work.title }}" loading="lazy">
+                        {% if work.images.count > 0 %}
+                        <span class="portfolio-badge">
+                            <i class="bi bi-images"></i> {{ work.images.count }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="portfolio-body">
+                        {% if work.category %}
+                        <span class="service-category">{{ work.category.name }}</span>
+                        {% endif %}
+                        <h3>{{ work.title }}</h3>
+                        <p>{{ work.description|striptags|truncatechars:100 }}</p>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Работ пока нет.</p>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'portfolio:add' %}" class="btn btn-primary">Добавить первую работу</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="pagination-wrap">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}">←</a></li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}">→</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

@@ -15,17 +15,18 @@ class HomeView(View):
     """Главная страница."""
 
     def get(self, request):
-        """Рендерит главную с блоками услуг, преимуществ, отзывов."""
+        """Рендерит главную с блоками услуг, преимуществ, отзывов, портфолио."""
+        from apps.portfolio.models import PortfolioWork
         context = {
             'categories': Category.objects.filter(is_active=True)[:8],
             'popular_services': Service.objects.filter(is_active=True)[:6],
             'advantages': Advantage.objects.filter(is_active=True),
             'reviews': Review.objects.filter(is_published=True)[:6],
             'faqs': FAQ.objects.filter(is_active=True),
+            'portfolio_works': PortfolioWork.objects.filter(is_active=True)[:6],
             'callback_form': CallbackForm(),
         }
         return render(request, 'core/home.html', context)
-
 
 class AboutView(TemplateView):
     """О нас."""
